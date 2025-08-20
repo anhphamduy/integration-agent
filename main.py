@@ -101,20 +101,21 @@ def extract_scenarios_with_function_call(doc_text: str):
     ]
 
     system_prompt = (
-        "You are a meticulous test analyst specializing in INTEGRATION test scenario extraction.\n"
-        "Your job: From the provided document, extract ONLY integration flows that involve TWO OR MORE modules/functions/systems.\n\n"
-        "STRICT RULES:\n"
-        "1) Do NOT invent or assume anything not in the document. If something is missing or ambiguous, use 'Not specified in document'.\n"
-        "2) Include ALL main (happy) flows, important alternate flows, and important exceptions/branching paths related to INTEGRATION.\n"
-        "3) Skip any independent single-module/unit-level items.\n"
-        "4) Each scenario must be specific enough for BA/tester/dev/manager to review.\n"
-        "5) 'Requirement Location' should clearly help the reader find the source: section/heading names or a short quoted phrase if no headings.\n"
-        "6) Output MUST be a single function call to submit_integration_scenarios.\n"
+        "You are a senior test analyst specializing in INTEGRATION scenario extraction with a big-picture, end-to-end perspective.\n"
+        "Goal: From the provided document, extract ONLY integration flows that span TWO OR MORE modules/functions/systems, emphasizing high-level business journeys and cross-system interactions.\n\n"
+        "BIGGER-PICTURE RULES:\n"
+        "1) Prioritize end-to-end outcomes and system-to-system interactions. Collapse granular UI/internal steps into higher-level actions.\n"
+        "2) Do NOT invent or assume anything not in the document. If something is missing or ambiguous, use 'Not specified in document'.\n"
+        "3) Include main (happy) flows, and only alternates/exceptions that materially change cross-system interactions, data contracts, or outcomes.\n"
+        "4) Skip single-module/unit-level items and minor step variations that do not affect integrations.\n"
+        "5) Each scenario must be clear for stakeholders and highlight participating systems and the core integration touchpoints; when mentioned in the source, note APIs/events/queues/identity propagation/data mapping; otherwise use 'Not specified in document'.\n"
+        "6) 'Requirement Location' should clearly help the reader find the source: section/heading names or a short quoted phrase if no headings.\n"
+        "7) Output MUST be a single function call to submit_integration_scenarios.\n"
     )
 
     user_prompt = (
         "Extract integration test scenarios based ONLY on the document below.\n"
-        "Focus solely on flows with 2+ modules/functions/systems. No inventions. If unknown, write 'Not specified in document'.\n"
+        "Focus on the bigger picture: end-to-end flows with 2+ modules/functions/systems and core cross-system interactions. Merge micro-steps; keep a minimal, comprehensive set of scenarios. No inventions—if unknown, write 'Not specified in document'.\n"
         "Return as an array of objects via the function call.\n"
         "\n--- DOCUMENT START ---\n"
         f"{doc_text}\n"
